@@ -1,0 +1,26 @@
+﻿@inject IJSRuntime JS
+
+@*<h1>jsQR Demo</h1>
+  
+<a id="githubLink" href="https://github.com/cozmo/jsQR">View documentation on Github</a>
+
+<p>Pure JavaScript QR code decoding library.</p>
+*@
+
+<div id="loadingMessage">Loading video stream (please make sure you have a camera enabled)</div>
+
+<canvas id="canvas" hidden></canvas>
+
+@if (ShowOutput)
+{
+    <div id="output" hidden>
+        <div id="outputMessage">No QR code detected.</div>
+        <div hidden><b>Data:</b> <span id="outputData"></span></div>
+    </div>
+}
+
+ @code {
+    
+    [Parameter]
+    public bool ShowOutput { get; set; } = false;    
+}

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <PackageId>ReactorBlazorQRCodeScanner</PackageId>
+    <Version>1.0.2</Version>
+    <Authors>Yann Vasseur</Authors>
+    <Company>reactor.fr</Company>
+    <PackageTags>Blazor;Reactor;QRCode;ScannerQR Code</PackageTags>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.4" />
+  </ItemGroup>
+
+</Project>
