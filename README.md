@@ -153,7 +153,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Yann Vasseur - [@YannVasseur](https://twitter.com/YannVasseur) - contact@reactor.fr
 
-Project Link: [https://github.com/couscousbzh](https://github.com/YannVasseur35/ReactorBlazorQRCodeScanner)
+Project Link: [https://github.com/YannVasseur35/ReactorBlazorQRCodeScanner](https://github.com/YannVasseur35/ReactorBlazorQRCodeScanner)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
