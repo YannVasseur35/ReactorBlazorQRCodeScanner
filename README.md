@@ -12,6 +12,10 @@
 
 An easy implementation of [jsQR](https://github.com/cozmo/jsQR), as a Blazor Component.
 
+[DEMO](https://blazordemo.reactor.fr/sample/QRCode)
+
+[GITHUB](https://github.com/YannVasseur35/ReactorBlazorQRCodeScanner)
+
 <!-- ABOUT THE PROJECT -->
 
 ### About The Project
