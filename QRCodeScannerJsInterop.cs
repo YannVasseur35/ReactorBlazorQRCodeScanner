@@ -22,8 +22,16 @@ namespace ReactorBlazorQRCodeScanner
             var module = await moduleTask.Value;
             await module.InvokeVoidAsync("Scanner.Init");
         }
-        
 
+        public async ValueTask StopRecording()
+        {
+            if (moduleTask.IsValueCreated)
+            {
+                var module = await moduleTask.Value;
+                await module.InvokeVoidAsync("Scanner.Stop");
+            }
+        }
+        
         private static DateTime? _lastScannedValueDateTime;
         private static int _scanInterval = 2000;
 
@@ -36,18 +44,14 @@ namespace ReactorBlazorQRCodeScanner
                 DoSomethingAboutThisQRCode(value);
             }
 
-            //Si le dernier scan est assez vieux
+            // If the last scan is old enough
             var maxDate = DateTime.Now.AddMilliseconds(-_scanInterval);
             if(_lastScannedValueDateTime < maxDate)
             {
                 _lastScannedValueDateTime = DateTime.Now;
                 DoSomethingAboutThisQRCode(value);                
             }
-            else
-            {
-                //Le dernier scan est trop récent, pour éviter d'avoir une multitude de requete a traiter on ne fait rien.
-            }
-        
+
             return Task.FromResult("retour"); //Inutile, mais bon des fois qu'on ait besoin un jour d'obtenir un retour ici...
         }
 
