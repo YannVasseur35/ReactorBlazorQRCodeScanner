@@ -56,12 +56,14 @@ Open a razor page or a component
 
    ```dotnet
     @code {
-      private QRCodeScannerJsInterop? _qrCodeScannerJsInterop;
 
-      private Action<string> _onQrCodeScanAction = (code) => OnQrCodeScan(code);
+      private QRCodeScannerJsInterop? _qrCodeScannerJsInterop;
+      private Action<string>? _onQrCodeScanAction; 
 
       protected override async Task OnInitializedAsync()
       {
+         _onQrCodeScanAction = (code) => OnQrCodeScan(code);  
+
           _qrCodeScannerJsInterop = new QRCodeScannerJsInterop(JS);
           await _qrCodeScannerJsInterop.Init(_onQrCodeScanAction);
       }
