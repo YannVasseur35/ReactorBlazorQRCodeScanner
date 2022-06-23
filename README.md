@@ -104,12 +104,33 @@ On your page/componenent initialization, you need to build the QRCodeScannerJsIn
 
 When this one is Invoked, it fires the methods "OnQrCodeScan" where you can treat your QRCode data.
 
+```dotnet
+protected async Task StopQRScan()
+      {
+          await _qrCodeScannerJsInterop.StopRecording();
+      }
+```
+
+With "StopRecording" you can cancel the QR recording / video stream so that the browser will no longer use the webcam and the webcam icon in the browser (red dot) will dissapear.
+
 ### Options
 
-you can show/hide the output line that indicates the result of the QRCode when scanned. Defaut is true (visible)
+- You can show/hide the output line that indicates the result of the QRCode when scanned. Default is true (visible)
 
 ```dotnet
 <QRCodeScanner ShowOutput="false"/>
+```
+
+- You can set a custom loading message with the parameter "LoadingMessage", the default message is "Loading video stream (please make sure you have a camera enabled)".
+
+```dotnet
+<QRCodeScanner LoadingMessage="My custom loading message"/>
+```
+
+- You can set a custom output message, when no QR code is scanned, with the parameter "OutputMessage", the default message is "No QR code detected.".
+
+```dotnet
+<QRCodeScanner OutputMessage="My custom no QR code found message"/>
 ```
 
 ### TroubleShooting

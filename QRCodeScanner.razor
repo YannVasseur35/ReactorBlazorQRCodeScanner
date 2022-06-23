@@ -7,14 +7,14 @@
 <p>Pure JavaScript QR code decoding library.</p>
 *@
 
-<div id="loadingMessage">Loading video stream (please make sure you have a camera enabled)</div>
+<div id="loadingMessage">@LoadingMessage</div>
 
 <canvas id="canvas" hidden></canvas>
 
 @if (ShowOutput)
 {
     <div id="output" hidden>
-        <div id="outputMessage">No QR code detected.</div>
+        <div id="outputMessage">@OutputMessage</div>
         <div hidden><b>Data:</b> <span id="outputData"></span></div>
     </div>
 }
@@ -22,5 +22,11 @@
  @code {
     
     [Parameter]
-    public bool ShowOutput { get; set; } = false;    
+    public bool ShowOutput { get; set; } = false;
+
+    [Parameter]
+    public string LoadingMessage { get; set; } = "Loading video stream (please make sure you have a camera enabled)";    
+
+    [Parameter]
+    public string OutputMessage { get; set; } = "No QR code detected.";        
 }
