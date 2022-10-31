@@ -2,8 +2,9 @@ import("./jsQR.js");
 var videoObject = null;
 var videoStopped = false;
 
-var Scanner = {
+//  1
 
+var Scanner = {
     Wait: function (ms) {
         var start = new Date().getTime();
         var end = start;
@@ -13,6 +14,17 @@ var Scanner = {
     },
     QRCodeScanned: function (code) {
         DotNet.invokeMethodAsync("ReactorBlazorQRCodeScanner", "QRCodeJsCallBack", code);
+    },
+    ManageError: function (error) {
+        //console.error("ManageError " + error);
+        var json = JSON.stringify(error);
+        DotNet.invokeMethodAsync("ReactorBlazorQRCodeScanner", "ManageErrorJsCallBack", json);
+        //if (error.name == 'NotAllowedError') {
+        //    // user denied access to camera
+        //    var json = JSON.stringify(error);
+        //    //console.warn("ManageError user denied access to camera " + json);
+        //    DotNet.invokeMethodAsync("ReactorBlazorQRCodeScanner", "ManageErrorJsCallBack", json);
+        //}
     },
     Init: function () {
         try {
@@ -42,16 +54,18 @@ var Scanner = {
                     videoObject.srcObject = stream;
                     videoObject.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
                     videoObject.play();
-                    requestAnimationFrame(tick);
+                    requestAnimationFrame(tick)
+                })
+                .catch((userMediaError) => {
+                    //console.error("mediaDevices " + userMediaError);
+                    Scanner.ManageError(userMediaError);
                 });
 
             function tick() {
-
                 if (videoStopped === true) // if the video has been stopped we don't have to execute the QR reading
                     return;
 
                 if (videoObject.readyState === videoObject.HAVE_ENOUGH_DATA) {
-
                     loadingMessage.hidden = true;
                     canvasElement.hidden = false;
                     if (outputContainer)
@@ -103,14 +117,13 @@ var Scanner = {
                         }
 
                         Scanner.QRCodeScanned(code.data);
-
                     }
                 }
                 requestAnimationFrame(tick);
             }
-
         } catch (error) {
-            console.error(error);
+            Scanner.ManageError(error);
+            //console.error("Scanner.Init.Error : " + error);
         }
     },
     Stop: function () {
@@ -137,9 +150,7 @@ var Scanner = {
         } catch (error) {
             console.error(error);
         }
-
     },
-
 };
 
 export { Scanner };
