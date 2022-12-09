@@ -138,13 +138,13 @@ With "StopRecording" you can cancel the QR recording / video stream so that the 
 - You can set a width in pixel (W/H ratio repected) :
 
 ```dotnet
-<QRCodeScanner Width="100/>
+<QRCodeScanner Width="100"/>
 ```
 
 or in % of the screen width size (W/H ratio repected) :
 
 ```dotnet
-<QRCodeScanner Width="90%/>
+<QRCodeScanner Width="90%"/>
 ```
 
 Width default will be the size of your camera video stream. 
