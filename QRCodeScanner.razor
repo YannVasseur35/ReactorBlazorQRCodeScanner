@@ -9,7 +9,7 @@
 
 <div id="loadingMessage">@LoadingMessage</div>
 
-<canvas id="canvas" hidden></canvas>
+<canvas id="canvas" requestedWidth="@Width" hidden></canvas>
 
 @if (ShowOutput)
 {
@@ -21,6 +21,9 @@
 
  @code {
     
+    [Parameter]
+    public string Width { get; set; }
+
     [Parameter]
     public bool ShowOutput { get; set; } = false;
 

@@ -2,8 +2,6 @@ import("./jsQR.js");
 var videoObject = null;
 var videoStopped = false;
 
-//  1
-
 var Scanner = {
     Wait: function (ms) {
         var start = new Date().getTime();
@@ -37,6 +35,7 @@ var Scanner = {
             var outputContainer = document.getElementById("output");
             var outputMessage = document.getElementById("outputMessage");
             var outputData = document.getElementById("outputData");
+            var requestedWidth = canvasElement.getAttribute("requestedWidth");
 
             function drawLine(begin, end, color) {
                 canvas.beginPath();
@@ -71,8 +70,31 @@ var Scanner = {
                     if (outputContainer)
                         outputContainer.hidden = false;
 
-                    canvasElement.height = videoObject.videoHeight;
-                    canvasElement.width = videoObject.videoWidth;
+                    //### VIDEO SCREEN SIZE
+
+                    var videoRatio = videoObject.videoWidth / videoObject.videoHeight;
+                    var screenwidth = window.innerWidth;
+                    var screenheight = window.innerHeight;
+ 
+                    if (!requestedWidth) {
+                        //No requested size, original video size is displayed
+                        canvasElement.width = videoObject.videoWidth;
+                        canvasElement.height = videoObject.videoHeight;
+                    }
+                    else if (requestedWidth.includes('%')) {
+                        //Width in % of the screen width size 
+                        var percent = parseInt(requestedWidth, 10);                                          
+                        canvasElement.width = screenwidth * percent / 100;
+                        canvasElement.height = screenwidth * percent / 100 / videoRatio;
+                    }
+                    else  {
+                        //Width in pixel
+                        canvasElement.width = requestedWidth;
+                        canvasElement.height = requestedWidth / videoRatio;
+                    } 
+
+                    //### VIDEO SCREEN SIZE
+
                     canvas.drawImage(
                         videoObject,
                         0,
