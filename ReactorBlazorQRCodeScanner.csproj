@@ -10,6 +10,8 @@
     <Authors>Yann Vasseur</Authors>
     <Company>reactor.fr</Company>
     <PackageTags>Blazor;Reactor;QRCode;ScannerQR Code</PackageTags>
+
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
 
@@ -19,6 +21,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>    
+    <None Include="docs\README.md" Pack="true" PackagePath="\"/>    
   </ItemGroup>
 
 </Project>
