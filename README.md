@@ -12,8 +12,6 @@
 
 An easy implementation of [jsQR](https://github.com/cozmo/jsQR), as a Blazor Component.
 
-[DEMO](https://blazordemo.reactor.fr/)
-
 [GITHUB](https://github.com/YannVasseur35/ReactorBlazorQRCodeScanner)
 
 <!-- ABOUT THE PROJECT -->
@@ -24,7 +22,7 @@ I just needed a component that help me scan QR Code. As I could not found one in
 
 ### Requirement
 
-Should work with .net Core 3.1. Works with .net 6.0
+Should work with .net Core 3.1. Works with .net 6.0 and 7.0
 
 ### Getting Started
 
