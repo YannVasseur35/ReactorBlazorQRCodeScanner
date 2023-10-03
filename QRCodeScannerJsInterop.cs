@@ -18,21 +18,22 @@ namespace ReactorBlazorQRCodeScanner
                 "import", "./_content/ReactorBlazorQRCodeScanner/qrCodeScannerJsInterop.js").AsTask());
         }
 
-        public async ValueTask Init(Action<string> onQrCodeScanAction)
+        public async ValueTask Init(Action<string> onQrCodeScanAction, bool useFrontCamera = false)
         {
             _onQrCodeScanAction = onQrCodeScanAction;
 
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("Scanner.Init");
+            await module.InvokeVoidAsync("Scanner.Init", new object[1] { useFrontCamera });
         }
 
-        public async ValueTask Init(Action<string> onQrCodeScanAction, Action<string> onCameraPermissionFailedAction)
+        public async ValueTask Init(Action<string> onQrCodeScanAction, Action<string> onCameraPermissionFailedAction
+            , bool useFrontCamera = false)
         {
             _onQrCodeScanAction = onQrCodeScanAction;
             _onCameraPermissionFailedAction = onCameraPermissionFailedAction;
 
             var module = await moduleTask.Value;
-            await module.InvokeVoidAsync("Scanner.Init");
+            await module.InvokeVoidAsync("Scanner.Init", new object[1] { useFrontCamera });
         }
 
         public async ValueTask StopRecording()
