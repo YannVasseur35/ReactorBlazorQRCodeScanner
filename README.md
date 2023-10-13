@@ -151,7 +151,7 @@ Width default will be the size of your camera video stream.
 
 You need to have a camera on your device.
 
-It can works on a laptop with a webcam, or it could be a phone's camera (only back camera, not front)
+It can works on a laptop with a webcam, or it could be a phone's camera
 
 The webbrowser will ask you permission to use the camera.
 
