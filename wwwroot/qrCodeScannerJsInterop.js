@@ -24,7 +24,7 @@ var Scanner = {
         //    DotNet.invokeMethodAsync("ReactorBlazorQRCodeScanner", "ManageErrorJsCallBack", json);
         //}
     },
-    Init: function () {
+    Init: function (useFront) {
         try {
             console.log("init jsQR");
             videoStopped = false;
@@ -47,8 +47,16 @@ var Scanner = {
             }
 
             // Use facingMode: environment to attemt to get the front camera on phones
+            var videoConfig = {};
+            if (useFront) {
+                videoConfig = { video: { facingMode: "user" } };
+            }
+            else {
+                videoConfig = { video: { facingMode: "environment" } };
+            }
+
             navigator.mediaDevices
-                .getUserMedia({ video: { facingMode: "environment" } })
+                .getUserMedia(videoConfig)
                 .then(function (stream) {
                     videoObject.srcObject = stream;
                     videoObject.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
