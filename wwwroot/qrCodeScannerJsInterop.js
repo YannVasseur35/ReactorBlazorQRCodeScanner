@@ -24,7 +24,7 @@ var Scanner = {
         //    DotNet.invokeMethodAsync("ReactorBlazorQRCodeScanner", "ManageErrorJsCallBack", json);
         //}
     },
-    Init: function (useFront) {
+    Init: function (useFront, flipHorizontal) {
         try {
             console.log("init jsQR");
             videoStopped = false;
@@ -44,6 +44,18 @@ var Scanner = {
                 canvas.lineWidth = 4;
                 canvas.strokeStyle = color;
                 canvas.stroke();
+            }
+
+            // function to assist flipping the borders of the QR code if the video is flipped
+            function transformLocationForFlipHorizontal(location) {
+                const transformPoint = ({ x, y }) => ({ x: canvasElement.width - x, y });
+                return {
+                    topLeftCorner: transformPoint(location.topLeftCorner),
+                    topRightCorner: transformPoint(location.topRightCorner),
+                    bottomRightCorner: transformPoint(location.bottomRightCorner),
+                    bottomLeftCorner: transformPoint(location.bottomLeftCorner)
+                };
+
             }
 
             // Use facingMode: environment to attemt to get the front camera on phones
@@ -83,7 +95,7 @@ var Scanner = {
                     var videoRatio = videoObject.videoWidth / videoObject.videoHeight;
                     var screenwidth = window.innerWidth;
                     var screenheight = window.innerHeight;
- 
+
                     if (!requestedWidth) {
                         //No requested size, original video size is displayed
                         canvasElement.width = videoObject.videoWidth;
@@ -91,17 +103,21 @@ var Scanner = {
                     }
                     else if (requestedWidth.includes('%')) {
                         //Width in % of the screen width size 
-                        var percent = parseInt(requestedWidth, 10);                                          
+                        var percent = parseInt(requestedWidth, 10);
                         canvasElement.width = screenwidth * percent / 100;
                         canvasElement.height = screenwidth * percent / 100 / videoRatio;
                     }
-                    else  {
+                    else {
                         //Width in pixel
                         canvasElement.width = requestedWidth;
                         canvasElement.height = requestedWidth / videoRatio;
-                    } 
+                    }
 
                     //### VIDEO SCREEN SIZE
+                    if (flipHorizontal) {
+                        canvas.translate(canvasElement.width, 0);
+                        canvas.scale(-1, 1);
+                    }
 
                     canvas.drawImage(
                         videoObject,
@@ -120,6 +136,9 @@ var Scanner = {
                         inversionAttempts: "dontInvert",
                     });
                     if (code) {
+                        if (flipHorizontal) {
+                            code.location = transformLocationForFlipHorizontal(code.location);
+                        }
                         drawLine(
                             code.location.topLeftCorner,
                             code.location.topRightCorner,
