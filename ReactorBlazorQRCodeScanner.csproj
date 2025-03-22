@@ -13,6 +13,7 @@
 
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageDescription>An easy implementation of jsQR, as a Blazor Component.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>     
