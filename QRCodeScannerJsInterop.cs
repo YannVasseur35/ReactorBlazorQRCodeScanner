@@ -7,8 +7,8 @@ namespace ReactorBlazorQRCodeScanner
         private static DateTime? _lastScannedValueDateTime;
         private static int _scanInterval = 2000;
 
-        private static Action<string>? _onQrCodeScanAction;
-        private static Action<string>? _onCameraPermissionFailedAction;
+        private static Func<string, ValueTask>? _onQrCodeScanAction;
+        private static Func<string, ValueTask>? _onCameraPermissionFailedAction;
 
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
@@ -18,7 +18,21 @@ namespace ReactorBlazorQRCodeScanner
                 "import", "./_content/ReactorBlazorQRCodeScanner/qrCodeScannerJsInterop.js").AsTask());
         }
 
-        public async ValueTask Init(Action<string> onQrCodeScanAction, bool useFrontCamera = false, bool flipHorizontal = false)
+        public ValueTask Init(Action<string> onQrCodeScanAction, bool useFrontCamera = false, bool flipHorizontal = false)
+        {
+            return Init(code => { onQrCodeScanAction?.Invoke(code); return ValueTask.CompletedTask; },
+                useFrontCamera, flipHorizontal);
+        }
+
+        public ValueTask Init(Action<string> onQrCodeScanAction, Action<string> onCameraPermissionFailedAction
+            , bool useFrontCamera = false, bool flipHorizontal = false)
+        {
+            return Init(code => { onQrCodeScanAction?.Invoke(code); return ValueTask.CompletedTask; },
+                value => { onCameraPermissionFailedAction?.Invoke(value); return ValueTask.CompletedTask; },
+                useFrontCamera, flipHorizontal);
+        }
+
+        public async ValueTask Init(Func<string, ValueTask> onQrCodeScanAction, bool useFrontCamera = false, bool flipHorizontal = false)
         {
             _onQrCodeScanAction = onQrCodeScanAction;
 
@@ -26,7 +40,7 @@ namespace ReactorBlazorQRCodeScanner
             await module.InvokeVoidAsync("Scanner.Init", new object[2] { useFrontCamera, flipHorizontal });
         }
 
-        public async ValueTask Init(Action<string> onQrCodeScanAction, Action<string> onCameraPermissionFailedAction
+        public async ValueTask Init(Func<string, ValueTask> onQrCodeScanAction, Func<string, ValueTask> onCameraPermissionFailedAction
             , bool useFrontCamera = false, bool flipHorizontal = false)
         {
             _onQrCodeScanAction = onQrCodeScanAction;
@@ -48,23 +62,24 @@ namespace ReactorBlazorQRCodeScanner
 
 
         [JSInvokable]
-        public static Task<string> ManageErrorJsCallBack(string value)
+        public async static Task<string> ManageErrorJsCallBack(string value)
         {
             Console.WriteLine(value);
 
-            _onCameraPermissionFailedAction?.Invoke(value);
+            if (_onCameraPermissionFailedAction != null)
+                await _onCameraPermissionFailedAction(value);
 
-            return Task.FromResult("retour"); //Inutile, mais bon des fois qu'on ait besoin un jour d'obtenir un retour ici...
+            return "retour"; //Inutile, mais bon des fois qu'on ait besoin un jour d'obtenir un retour ici...
         }
 
 
         [JSInvokable]
-        public static Task<string> QRCodeJsCallBack(string value)
+        public static async Task<string> QRCodeJsCallBack(string value)
         {
             if (_lastScannedValueDateTime == null)
             {
                 _lastScannedValueDateTime = DateTime.Now;
-                DoSomethingAboutThisQRCode(value);
+                await DoSomethingAboutThisQRCode(value);
             }
 
             // If the last scan is old enough
@@ -72,20 +87,23 @@ namespace ReactorBlazorQRCodeScanner
             if (_lastScannedValueDateTime < maxDate)
             {
                 _lastScannedValueDateTime = DateTime.Now;
-                DoSomethingAboutThisQRCode(value);
+                await DoSomethingAboutThisQRCode(value);
             }
 
-            return Task.FromResult("retour"); //Inutile, mais bon des fois qu'on ait besoin un jour d'obtenir un retour ici...
+            return "retour"; //Inutile, mais bon des fois qu'on ait besoin un jour d'obtenir un retour ici...
         }
 
-        public static void DoSomethingAboutThisQRCode(string code)
+        public static ValueTask DoSomethingAboutThisQRCode(string code)
         {
             //Console.WriteLine($"QRCodeJsCallBack C# receive value: {code}");
 
             if (!string.IsNullOrEmpty(code))
             {
-                _onQrCodeScanAction?.Invoke(code);
+                if (_onQrCodeScanAction != null)
+                    return _onQrCodeScanAction(code);
             }
+
+            return ValueTask.CompletedTask;
         }
 
         public async ValueTask DisposeAsync()
